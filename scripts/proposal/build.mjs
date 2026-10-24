@@ -163,6 +163,7 @@ const SECTIONS = [
   ] },
   { id: 'admin', eyebrow: 'Part 3', title: 'The back office', intro: 'One private system for recruitment and client operations, with three roles: administrators see everything, recruiters see hiring, and operations see quotes, pickups and messages. It replaces paper files and email threads.', screens: [
     ['staff-login', 'Staff sign-in', ['Individual staff accounts; deactivated accounts are signed out immediately.']],
+    ['admin-users', 'Staff accounts', ['Add, change role or deactivate.']],
     ['admin-dashboard', 'Today', ['Each role sees the one number it has to act on first.']],
     ['admin-pipeline', 'Hiring pipeline', ['Drag and drop between stages; the applicant is notified by email and in the portal.']],
     ['admin-applicants', 'Applicants', ['Search, filter, bulk email and CSV export.']],
@@ -173,7 +174,6 @@ const SECTIONS = [
     ['admin-jobs', 'Job postings', ['Post, pause or close openings per island.']],
     ['admin-templates', 'Email templates', ['Recruiters edit the wording of every applicant email.']],
     ['admin-settings', 'Office settings', ['Office details are edited here, not in code.']],
-    ['admin-users', 'Staff accounts', ['Add, change role or deactivate.']],
   ] },
 ];
 
@@ -206,38 +206,67 @@ function sizeOf(f) {
   throw new Error(`Not a JPEG: ${f}`);
 }
 
-/** Pack consecutive slices of one screen onto as few pages as fit; each keeps its own caption. */
-function screenPages(sec, [key, title, bullets, opts]) {
-  const c = chunks[key];
-  const list = slicesOf(key, opts);
-  const MIN_SCALE = 0.68; // two slices may share a page if both stay at least this wide
-  const fits = (items, avail) => {
-    const img = items.reduce((n, s) => n + s.ratio * CONTENT_W, 0);
-    const over = items.reduce((n, s) => n + (s.cap ? CAP_H : 0) + GAP, 0);
-    return { scale: Math.min(1, (avail - over) / img), ok: items.length === 1 || (avail - over) / img >= MIN_SCALE };
+/**
+ * Pack a section's slices onto pages by measured height. Slices of one screen share a page while each
+ * stays at least MIN_SCALE wide; slices of different screens share a page (the later one under a small
+ * screen heading) while everything on it stays at least JOIN_SCALE wide, so short screens and short
+ * "part 3 of 3" tails do not sit alone on a mostly white page.
+ */
+const SUB_H = 0.4; // small screen heading for a screen that starts mid-page
+const MIN_SCALE = 0.68, JOIN_SCALE = 0.85;
+const urlOf = (key) => chunks[key].url.replace(/CSL-[A-Z0-9]+/g, 'CSL-…').replace(/\/\d+$/, '/…');
+const bulletsH = (b) => (b.length ? b.length * BULLET_H + 0.12 : 0);
+
+function sectionPages(sec) {
+  const items = sec.screens.flatMap(([key, title, bullets, opts]) =>
+    slicesOf(key, opts).map((s, n) => ({ ...s, key, title, bullets, startsScreen: n === 0 })));
+  const avail = CONTENT_H - HEAD_H;
+  const fits = (list) => {
+    const img = list.reduce((n, s) => n + s.ratio * CONTENT_W, 0);
+    const over = list.reduce((n, s, i) => n + (s.cap ? CAP_H : 0) + GAP + (s.startsScreen ? bulletsH(s.bullets) + (i ? SUB_H : 0) : 0), 0);
+    const scale = Math.min(1, (avail - over) / img);
+    const oneScreen = list.every(s => s.key === list[0].key);
+    return { scale, ok: list.length === 1 || scale >= (oneScreen ? MIN_SCALE : JOIN_SCALE) };
   };
-  const pages = [];
-  let cur = null;
-  for (const s of list) {
-    if (cur && fits([...cur.items, s], cur.avail).ok) { cur.items.push(s); continue; }
-    if (cur) pages.push(cur);
-    const first = pages.length === 0;
-    cur = { first, avail: CONTENT_H - HEAD_H - (first && bullets.length ? bullets.length * BULLET_H + 0.12 : 0), items: [s] };
+  // How much of the page a run of slices fills at its scale (headings, bullets and captions included).
+  const fill = (list) => {
+    const { scale } = fits(list);
+    const img = list.reduce((n, s) => n + s.ratio * CONTENT_W * scale, 0);
+    const over = list.reduce((n, s, i) => n + (s.cap ? CAP_H : 0) + GAP + (s.startsScreen ? bulletsH(s.bullets) + (i ? SUB_H : 0) : 0), 0);
+    return (img + over) / avail;
+  };
+  // Split the slices (in order) into pages: fewest pages first, then fewest half-empty pages, then the
+  // largest screenshots. A short tail that would sit alone is thereby pulled onto a neighbouring page,
+  // and the screens around it are regrouped if that is what makes it fit.
+  const UNDERFILLED = 0.6;
+  const best = [{ cost: 0, from: -1 }];
+  for (let i = 1; i <= items.length; i++) {
+    best[i] = { cost: Infinity, from: -1 };
+    for (let j = i - 1; j >= 0; j--) {
+      const run = items.slice(j, i), f = fits(run);
+      if (!f.ok) break;
+      const cost = best[j].cost + 1 + (fill(run) < UNDERFILLED ? 10 : 0) + 0.2 * (1 - f.scale);
+      if (cost < best[i].cost) best[i] = { cost, from: j };
+    }
   }
-  if (cur) pages.push(cur);
-  for (const p of pages) p.scale = fits(p.items, p.avail).scale;
-  return pages.map((p, pi) => `
+  const pages = [];
+  for (let i = items.length; i > 0; i = best[i].from) pages.unshift(items.slice(best[i].from, i));
+  const bulletList = (b) => (b.length ? `<ul class="bullets">${b.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '');
+  return pages.map((p, pi) => {
+    const scale = fits(p).scale, lead = p[0];
+    return `
     <section class="page shot">
       <header class="shot-head">
-        <div><p class="eyebrow">${esc(sec.title)}${pi ? ' · continued' : ''}</p><h2>${esc(title)}</h2></div>
-        <p class="url">${esc(c.url.replace(/CSL-[A-Z0-9]+/g, 'CSL-…').replace(/\/\d+$/, '/…'))}</p>
+        <div><p class="eyebrow">${esc(sec.title)}${pi ? ' · continued' : ''}</p><h2>${esc(lead.title)}</h2></div>
+        <p class="url">${esc(urlOf(lead.key))}</p>
       </header>
-      ${p.first && bullets.length ? `<ul class="bullets">${bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}
-      ${p.items.map(s => {
-        const h = s.ratio * CONTENT_W * p.scale;
-        return `<figure><img src="${file(s.f)}" style="height:${h.toFixed(2)}in" alt="${esc(title)}">${s.cap ? `<figcaption class="cap">${esc(s.cap)}</figcaption>` : ''}</figure>`;
+      ${p.map((s, i) => {
+        const h = s.ratio * CONTENT_W * scale;
+        const head = s.startsScreen ? (i ? `<header class="sub-head"><h3>${esc(s.title)}</h3><p class="url">${esc(urlOf(s.key))}</p></header>` : '') + bulletList(s.bullets) : '';
+        return `${head}<figure><img src="${file(s.f)}" style="height:${h.toFixed(2)}in" alt="${esc(s.title)}">${s.cap ? `<figcaption class="cap">${esc(s.cap)}</figcaption>` : ''}</figure>`;
       }).join('')}
-    </section>`).join('');
+    </section>`;
+  }).join('');
 }
 
 const phones = (items) => `<div class="phones">${items.map(([k, c, note]) => `<figure><img src="${file(chunks[k].chunks[0])}" alt="${esc(c)}"><figcaption><b>${esc(c)}</b>${note ? `<span>${esc(note)}</span>` : ''}</figcaption></figure>`).join('')}</div>`;
@@ -297,6 +326,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   /* screenshot pages */
   .shot-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; border-bottom: 2px solid var(--char-900); padding-bottom: 6px; margin-bottom: 8px; }
   .shot-head h2 { font-size: 17pt; } .url { font-family: "JetBrains Mono", monospace; font-size: 7.6pt; color: var(--ink-3); margin: 0; white-space: nowrap; }
+  .sub-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; border-bottom: 1px solid var(--line); padding: 4px 0 4px; margin: 4px 0 6px; break-after: avoid; } .sub-head h3 { font-size: 12.5pt; }
   .bullets { margin: 0 0 8px; padding-left: 15px; font-size: 9.2pt; } .bullets li { margin: 1px 0; } .bullets li::marker { color: var(--aqua-text); }
   figure { margin: 0 0 ${GAP}in; display: block; break-inside: avoid; }
   figure img { display: block; max-width: 100%; width: auto; margin: 0 auto; border: 1px solid var(--line); border-radius: 5px; }
@@ -377,7 +407,7 @@ ${SECTIONS.map(sec => `
   <p>${esc(sec.intro)}</p>
   <ol>${sec.screens.map(s => `<li>${esc(s[1])}</li>`).join('')}</ol>
 </section>
-${sec.screens.map(s => screenPages(sec, s)).join('')}
+${sectionPages(sec)}
 `).join('')}
 
 <section class="page">

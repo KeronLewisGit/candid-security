@@ -12,7 +12,7 @@ const OUT = path.resolve('dist/proposal/shots');
 const CHROME = process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const ADMIN = { email: process.env.ADMIN_EMAIL ?? 'admin@candid.test', password: process.env.ADMIN_PASSWORD ?? 'password' };
 const APPLICANT = { email: process.env.APPLICANT_EMAIL ?? 'applicant@candid.test', password: process.env.APPLICANT_PASSWORD ?? 'password' };
-const QUALITY = 80;
+const QUALITY = 72;
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
