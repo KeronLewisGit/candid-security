@@ -125,21 +125,21 @@
             </div>
             <div>
                 <h2 class="mono-label text-white/55">Services</h2>
-                <ul class="mt-5 space-y-3">
+                <ul class="mt-3">
                     @foreach (candid('services') as $key => $s)
-                        <li><a class="hover:text-white" href="{{ route('services.show', $key) }}">{{ $s['name'] }}</a></li>
+                        <li><a class="inline-flex min-h-11 items-center hover:text-white" href="{{ route('services.show', $key) }}">{{ $s['name'] }}</a></li>
                     @endforeach
                 </ul>
             </div>
             <div>
                 <h2 class="mono-label text-white/55">Company</h2>
-                <ul class="mt-5 space-y-3">
-                    <li><a class="hover:text-white" href="{{ route('about') }}">About &amp; history</a></li>
-                    <li><a class="hover:text-white" href="{{ route('locations') }}">Locations</a></li>
-                    <li><a class="hover:text-white" href="{{ route('careers') }}">Careers</a></li>
-                    <li><a class="hover:text-white" href="{{ route('portal.login') }}">Applicant portal</a></li>
-                    <li><a class="hover:text-white" href="{{ route('pickup') }}">Armoured pickup</a></li>
-                    <li><a class="hover:text-white" href="{{ route('contact') }}">Contact</a></li>
+                <ul class="mt-3">
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white" href="{{ route('about') }}">About &amp; history</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white" href="{{ route('locations') }}">Locations</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white" href="{{ route('careers') }}">Careers</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white" href="{{ route('portal.login') }}">Applicant portal</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white" href="{{ route('pickup') }}">Armoured pickup</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white" href="{{ route('contact') }}">Contact</a></li>
                 </ul>
             </div>
             <div class="space-y-6">

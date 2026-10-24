@@ -23,12 +23,12 @@
                                 <p class="text-xs text-ink-3">{{ $a->roleTitle() }}</p>
                                 <div class="mt-2 flex flex-wrap gap-1">
                                     <span class="badge-id !py-0 text-ink-3">{{ candid('islands.'.$a->island.'.code') ?? '—' }}</span>
-                                    @if ($m = count($a->missingDocuments()))<x-chip tone="attention" icon="file" class="!text-[11px]">{{ $m }} doc{{ $m > 1 ? 's' : '' }} missing</x-chip>@endif
-                                    @if ($a->exam_score !== null)<x-chip :tone="$a->examPassed() ? 'good' : 'critical'" icon="pencil" class="!text-[11px]">{{ $a->exam_score }}%</x-chip>@endif
-                                    @if ($a->drug_test_result)<x-chip :tone="$a->drug_test_result === 'negative' ? 'good' : ($a->drug_test_result === 'pending' ? 'neutral' : 'critical')" icon="shield" class="!text-[11px]">{{ ucfirst($a->drug_test_result) }}</x-chip>@endif
+                                    @if ($m = count($a->missingDocuments()))<x-chip tone="attention" icon="file" class="!text-xs">{{ $m }} doc{{ $m > 1 ? 's' : '' }} missing</x-chip>@endif
+                                    @if ($a->exam_score !== null)<x-chip :tone="$a->examPassed() ? 'good' : 'critical'" icon="pencil" class="!text-xs">{{ $a->exam_score }}%</x-chip>@endif
+                                    @if ($a->drug_test_result)<x-chip :tone="$a->drug_test_result === 'negative' ? 'good' : ($a->drug_test_result === 'pending' ? 'neutral' : 'critical')" icon="shield" class="!text-xs">{{ ucfirst($a->drug_test_result) }}</x-chip>@endif
                                 </div>
-                                @if ($booking)<p class="mt-2 rounded bg-aqua-soft px-2 py-1 text-[11px] font-semibold">Booked {{ $booking->slot->starts_at->format('D j M, g:i a') }}</p>@elseif ($k)<p class="mt-2 text-[11px] text-ink-3">Not booked yet</p>@endif
-                                <div class="mt-2 flex items-center justify-between gap-2 text-[11px] text-ink-3"><span>{{ $a->assignee?->name ?? 'Unassigned' }}</span><span @class(['font-semibold text-[color:var(--critical-text)]' => $late])>{{ $a->status_changed_at?->diffForHumans(short: true) }}</span></div>
+                                @if ($booking)<p class="mt-2 rounded bg-aqua-soft px-2 py-1 text-xs font-semibold">Booked {{ $booking->slot->starts_at->format('D j M, g:i a') }}</p>@elseif ($k)<p class="mt-2 text-xs text-ink-3">Not booked yet</p>@endif
+                                <div class="mt-2 flex items-center justify-between gap-2 text-xs text-ink-3"><span>{{ $a->assignee?->name ?? 'Unassigned' }}</span><span @class(['font-semibold text-[color:var(--critical-text)]' => $late])>{{ $a->status_changed_at?->diffForHumans(short: true) }}</span></div>
                                 {{-- No-JS / keyboard fallback for moving the card --}}
                                 <form method="POST" action="{{ route('admin.applications.update', $a) }}" class="mt-2 flex gap-1">
                                     @csrf @method('PATCH')

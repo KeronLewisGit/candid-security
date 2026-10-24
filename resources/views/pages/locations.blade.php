@@ -16,7 +16,7 @@
                     <h2 class="display-3 mt-2">{{ ucfirst($office) }}, {{ island_name($island) }}</h2>
                     <dl class="mt-6 grid gap-x-6 gap-y-4 sm:grid-cols-[7rem_1fr]">
                         @if ($address)<dt class="font-semibold text-ink-3">Address</dt><dd class="whitespace-pre-line">{{ $address }}</dd>@endif
-                        @if ($phone)<dt class="font-semibold text-ink-3">Phone</dt><dd><a href="{{ tel_href($phone) }}" class="text-link num font-semibold">{{ format_phone($phone) }}</a></dd>@endif
+                        @if ($phone)<dt class="font-semibold text-ink-3 sm:self-center">Phone</dt><dd><a href="{{ tel_href($phone) }}" class="text-link num inline-flex min-h-11 items-center font-semibold">{{ format_phone($phone) }}</a></dd>@endif
                         @if ($fax)<dt class="font-semibold text-ink-3">Fax</dt><dd class="num">{{ format_phone($fax) }}</dd>@endif
                         <dt class="font-semibold text-ink-3">Hours</dt><dd>{{ $hours ?: 'Please call for office hours.' }}</dd>
                     </dl>

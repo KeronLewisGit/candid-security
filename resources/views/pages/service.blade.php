@@ -4,7 +4,7 @@
     'provider' => ['@type' => 'Organization', 'name' => candid('name')], 'areaServed' => 'The Bahamas',
 ]]">
     <x-page-header :title="$service['name']" :eyebrow="$service['eyebrow']" :code="$service['since'] ? 'SINCE '.$service['since'] : 'CSL'" :photo="$service['photo']" :lead="$service['summary']">
-        <nav aria-label="Breadcrumb" class="mt-6 text-sm text-white/70"><a href="{{ route('services') }}" class="underline-offset-4 hover:underline">Services</a> <span aria-hidden="true">/</span> <span aria-current="page">{{ $service['name'] }}</span></nav>
+        <nav aria-label="Breadcrumb" class="mt-6 text-sm text-white/70"><a href="{{ route('services') }}" class="inline-flex min-h-11 items-center underline-offset-4 hover:underline">Services</a> <span aria-hidden="true">/</span> <span aria-current="page">{{ $service['name'] }}</span></nav>
     </x-page-header>
 
     <div class="wrap mt-16 grid gap-12 md:mt-20 lg:grid-cols-[minmax(0,1fr)_22rem]">

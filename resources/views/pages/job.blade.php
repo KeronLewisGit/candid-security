@@ -10,7 +10,7 @@
 @endphp
 <x-layouts.site :title="$job->title.' · '.$job->islandName()" :description="$job->summary" :json-ld="$job->isLive() ? [$posting] : []" :noindex="! $job->isLive()">
     <x-page-header :title="$job->title" eyebrow="{{ $job->islandName() }} · {{ $job->typeLabel() }}" :code="candid('islands.'.$job->island.'.code')" :lead="$job->summary">
-        <nav aria-label="Breadcrumb" class="mt-6 text-sm text-white/70"><a href="{{ route('careers') }}" class="underline-offset-4 hover:underline">Careers</a> <span aria-hidden="true">/</span> <span aria-current="page">{{ $job->title }}</span></nav>
+        <nav aria-label="Breadcrumb" class="mt-6 text-sm text-white/70"><a href="{{ route('careers') }}" class="inline-flex min-h-11 items-center underline-offset-4 hover:underline">Careers</a> <span aria-hidden="true">/</span> <span aria-current="page">{{ $job->title }}</span></nav>
     </x-page-header>
 
     <div class="wrap mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_21rem]">

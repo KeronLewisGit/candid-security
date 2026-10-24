@@ -69,28 +69,28 @@
                         </div>
                     @endforeach
                 </div>
-                <div class="mt-1 flex gap-2 border-t border-line pt-1">@foreach ($weekly as $w)<span class="flex-1 text-center text-[11px] text-ink-3">{{ $w['label'] }}</span>@endforeach</div>
+                <div class="mt-1 flex gap-2 border-t border-line pt-1">@foreach ($weekly as $w)<span class="flex-1 text-center text-xs text-ink-3">{{ $w['label'] }}</span>@endforeach</div>
             </section>
         </div>
 
         <div class="mt-4 grid gap-4 xl:grid-cols-2">
             <section class="a-card overflow-hidden">
                 <div class="flex items-center justify-between p-5 pb-3"><h3 class="font-semibold">Latest applications</h3><a href="{{ route('admin.applications.index') }}" class="-my-3 -mr-3 inline-flex min-h-11 items-center px-3 text-sm text-link">All</a></div>
-                <table class="data-table"><tbody>
+                <div class="overflow-x-auto"><table class="data-table"><tbody>
                     @foreach ($recentApplications as $a)
-                        <tr><td><a href="{{ route('admin.applications.show', $a) }}" class="font-semibold hover:text-aqua-text">{{ $a->full_name }}</a><span class="block text-xs text-ink-3">{{ $a->roleTitle() }} · {{ $a->islandName() }}</span></td><td><x-status :stage="$a->status" /></td><td class="r text-ink-3">{{ $a->submitted_at?->diffForHumans(short: true) }}</td></tr>
+                        <tr><td><a href="{{ route('admin.applications.show', $a) }}" class="font-semibold hover:text-aqua-text">{{ $a->full_name }}</a><span class="block text-xs text-ink-3">{{ $a->roleTitle() }} · {{ $a->islandName() }}</span></td><td><x-status :stage="$a->status" /><span class="mt-1 block text-xs text-ink-3 sm:hidden">{{ $a->submitted_at?->diffForHumans(short: true) }}</span></td><td class="r text-ink-3 max-sm:hidden">{{ $a->submitted_at?->diffForHumans(short: true) }}</td></tr>
                     @endforeach
-                </tbody></table>
+                </tbody></table></div>
             </section>
             <section class="a-card overflow-hidden">
                 <div class="flex items-center justify-between p-5 pb-3"><h3 class="font-semibold">Next screening sessions</h3><a href="{{ route('admin.slots.index') }}" class="-my-3 -mr-3 inline-flex min-h-11 items-center px-3 text-sm text-link">Manage</a></div>
-                <table class="data-table"><tbody>
+                <div class="overflow-x-auto"><table class="data-table"><tbody>
                     @forelse ($upcomingSlots as $s)
                         <tr><td><span class="font-semibold">{{ $s->kindLabel() }}</span><span class="block text-xs text-ink-3">{{ island_name($s->island) }} · {{ $s->location }}</span></td><td class="num">{{ $s->starts_at->format('D j M, g:i a') }}</td><td class="r num">{{ $s->bookings_count }}/{{ $s->capacity }}</td></tr>
                     @empty
                         <tr><td class="text-ink-3">No sessions scheduled. <a class="text-link" href="{{ route('admin.slots.index') }}">Add one</a> so applicants can book.</td></tr>
                     @endforelse
-                </tbody></table>
+                </tbody></table></div>
             </section>
         </div>
     @endif
@@ -105,21 +105,21 @@
         <div class="mt-4 grid gap-4 xl:grid-cols-2">
             <section class="a-card overflow-hidden">
                 <div class="p-5 pb-3"><h3 class="font-semibold">Armoured pickups, next 48 hours</h3></div>
-                <table class="data-table"><tbody>
+                <div class="overflow-x-auto"><table class="data-table"><tbody>
                     @forelse ($pickupsSoon as $r)
                         <tr><td><a href="{{ route('admin.requests.show', $r) }}" class="font-semibold hover:text-aqua-text">{{ $r->company ?: $r->name }}</a><span class="block text-xs text-ink-3">{{ $r->detail('pickup_address') }}</span></td><td>{{ $r->needed_on?->format('D j M') }} · {{ $r->option('window', \App\Models\ServiceRequest::WINDOWS) }}</td><td class="r"><x-chip :tone="$r->status === 'new' ? 'attention' : 'neutral'" :icon="$r->status === 'new' ? 'dot' : 'check'">{{ $r->statusLabel() }}</x-chip></td></tr>
                     @empty
                         <tr><td class="text-ink-3">No pickups due.</td></tr>
                     @endforelse
-                </tbody></table>
+                </tbody></table></div>
             </section>
             <section class="a-card overflow-hidden">
                 <div class="p-5 pb-3"><h3 class="font-semibold">Latest client requests</h3></div>
-                <table class="data-table"><tbody>
+                <div class="overflow-x-auto"><table class="data-table"><tbody>
                     @foreach ($recentRequests as $r)
-                        <tr><td><a href="{{ route('admin.requests.show', $r) }}" class="font-semibold hover:text-aqua-text">{{ $r->company ?: $r->name }}</a><span class="block text-xs text-ink-3">{{ $r->kindLabel() }} · {{ $r->reference }}</span></td><td>@if($r->isOverdue())<x-chip tone="critical" icon="clock">Over 24h</x-chip>@else<x-chip :tone="$r->status === 'new' ? 'attention' : 'neutral'" icon="dot">{{ $r->statusLabel() }}</x-chip>@endif</td><td class="r text-ink-3">{{ $r->created_at->diffForHumans(short: true) }}</td></tr>
+                        <tr><td><a href="{{ route('admin.requests.show', $r) }}" class="font-semibold hover:text-aqua-text">{{ $r->company ?: $r->name }}</a><span class="block text-xs text-ink-3">{{ $r->kindLabel() }} · {{ $r->reference }}</span></td><td>@if($r->isOverdue())<x-chip tone="critical" icon="clock">Over 24h</x-chip>@else<x-chip :tone="$r->status === 'new' ? 'attention' : 'neutral'" icon="dot">{{ $r->statusLabel() }}</x-chip>@endif<span class="mt-1 block text-xs text-ink-3 sm:hidden">{{ $r->created_at->diffForHumans(short: true) }}</span></td><td class="r text-ink-3 max-sm:hidden">{{ $r->created_at->diffForHumans(short: true) }}</td></tr>
                     @endforeach
-                </tbody></table>
+                </tbody></table></div>
             </section>
         </div>
     @endif

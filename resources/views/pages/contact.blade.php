@@ -19,9 +19,9 @@
             </form>
             <div class="panel p-5 sm:p-8">
                 <h2 class="display-3">Email</h2>
-                <dl class="mt-4 grid gap-3 sm:grid-cols-[12rem_1fr]">
-                    @if ($e = setting('general_email'))<dt class="text-ink-3">Office of the President</dt><dd><a class="text-link" href="mailto:{{ $e }}">{{ $e }}</a></dd>@endif
-                    @if ($e = setting('hr_email'))<dt class="text-ink-3">Recruitment &amp; HR</dt><dd><a class="text-link" href="mailto:{{ $e }}">{{ $e }}</a></dd>@endif
+                <dl class="mt-4 grid gap-x-3 sm:grid-cols-[12rem_1fr] sm:items-center">
+                    @if ($e = setting('general_email'))<dt class="text-ink-3">Office of the President</dt><dd class="mb-2 sm:mb-0"><a class="text-link inline-flex min-h-11 items-center break-all" href="mailto:{{ $e }}">{{ $e }}</a></dd>@endif
+                    @if ($e = setting('hr_email'))<dt class="text-ink-3">Recruitment &amp; HR</dt><dd class="mb-2 sm:mb-0"><a class="text-link inline-flex min-h-11 items-center break-all" href="mailto:{{ $e }}">{{ $e }}</a></dd>@endif
                 </dl>
             </div>
         </div>

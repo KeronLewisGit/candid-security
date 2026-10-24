@@ -215,7 +215,7 @@
     .mono-label { font-family: var(--ff-mono), ui-monospace, monospace; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
 
     /* Badge number, as printed on an ID card or a post order: "POST 03". */
-    .badge-id { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.55rem; border: 1px solid currentColor; border-radius: 3px; font-family: var(--ff-mono), ui-monospace, monospace; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+    .badge-id { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.55rem; border: 1px solid currentColor; border-radius: 3px; font-family: var(--ff-mono), ui-monospace, monospace; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
 
     /*
      * Motif 2: the patrol route. A dotted line with checkpoint rings, like the
@@ -368,7 +368,7 @@ select.a-input { appearance: none; padding-right: 2.25rem; background-image: url
 .a-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
 .a-label { display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.35rem; color: var(--ink-2); }
 .kbd { font: 600 0.75rem/1 var(--ff-sans), ui-sans-serif; padding: 0.2rem 0.4rem; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 0.35rem; color: var(--ink-3); }
-.kanban-col { display: flex; flex: none; flex-direction: column; width: 17.5rem; border-radius: 10px; background: var(--surface-2); padding: 0.5rem; transition: box-shadow 0.15s; }
+.kanban-col { position: relative; display: flex; flex: none; flex-direction: column; width: 17.5rem; border-radius: 10px; background: var(--surface-2); padding: 0.5rem; transition: box-shadow 0.15s; }
 .kanban-col.drag-over { box-shadow: inset 0 0 0 2px var(--aqua-text); }
 .kanban-card { display: block; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); padding: 0.75rem; cursor: grab; box-shadow: var(--shadow-sm); }
 .kanban-card:active { cursor: grabbing; }

@@ -10,7 +10,7 @@
                         <span class="badge-id text-ink-3">Post {{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
                         <span class="mono-label text-gold-text">{{ $s['eyebrow'] }}@if($s['since']) · since {{ $s['since'] }}@endif</span>
                     </div>
-                    <h2 class="display-3 mt-4"><a href="{{ route('services.show', $key) }}" class="hover:text-aqua-text">{{ $s['name'] }}</a></h2>
+                    <h2 class="display-3 mt-4"><a href="{{ route('services.show', $key) }}" class="-my-2 inline-block py-2 hover:text-aqua-text">{{ $s['name'] }}</a></h2>
                     <p class="measure mt-3 text-ink-2">{{ $s['summary'] }}</p>
                     <ul class="mt-5 grid gap-x-6 gap-y-2 sm:grid-cols-2">
                         @foreach ($s['points'] as $point)
