@@ -359,7 +359,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   <div class="photo" style="background-image:url('${file(COVER)}')"></div>
   <div class="meta">
     <div><b>Prepared for</b><strong>Candid Security Ltd.</strong><br>Polaris Drive, Freeport, Grand Bahama<br>and Nassau, New Providence<br>Attention: Cleveland A. Duncombe, President &amp; CEO</div>
-    <div><b>Prepared by</b><strong>Keron Lewis</strong>, Code Canvas Consultants Ltd<br>Port of Spain · codecanvastt.com<br>+1 868 466-CODE · keronlewis@live.com</div>
+    <div><b>Prepared by</b><strong>Keron Lewis</strong>, Code Canvas Consultants Ltd<br>Port of Spain · codecanvastt.com<br>+1 868 466-CODE · info@codecanvastt.com</div>
   </div>
 </section>
 
@@ -519,7 +519,7 @@ ${sectionPages(sec)}
     <li><b>Kick off</b> the same week, and launch six weeks later.</li>
   </ol>
   <div class="contact-card">
-    <div><strong>Keron Lewis</strong><p>Director, Code Canvas Consultants Ltd · Port of Spain, Trinidad and Tobago</p><p>codecanvastt.com · +1 868 466-CODE · keronlewis@live.com</p></div>
+    <div><strong>Keron Lewis</strong><p>Director, Code Canvas Consultants Ltd · Port of Spain, Trinidad and Tobago</p><p>codecanvastt.com · +1 868 466-CODE · info@codecanvastt.com<br>Book a call: calendly.com/keronlewis/30min</p></div>
     ${MARK(56)}
   </div>
   ${foot}
