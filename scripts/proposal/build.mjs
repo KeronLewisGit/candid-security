@@ -12,7 +12,7 @@ const chunks = JSON.parse(fs.readFileSync(path.join(SHOTS, 'chunks.json'), 'utf8
 const OUT_HTML = path.resolve('dist/proposal/proposal.html');
 const OUT_PDF = path.resolve('dist/proposal/Candid-Security-Website-Proposal.pdf');
 const DATE = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-const TESTS = process.env.TEST_COUNT ?? '75';
+const TESTS = process.env.TEST_COUNT ?? '76';
 const file = (f) => 'file://' + f;
 
 // Chrome embeds WebP backgrounds losslessly (several MB), so hand it a JPEG of the cover photo (macOS sips).
@@ -38,9 +38,10 @@ const FONTS = `
   @font-face { font-family: "Work Sans"; src: url("${asset('work-sans-700-normal')}") format("woff2"); font-weight: 700; }
   @font-face { font-family: "JetBrains Mono"; src: url("${asset('jetbrains-mono-500-normal')}") format("woff2"); font-weight: 500; }`;
 
-// The site's logo: a redraw of Candid's round badge (aquamarine disc, charcoal ring and C, five gold stars).
-const MARK = (size = 44) => `<svg viewBox="0 0 44 44" width="${size}" height="${size}" aria-hidden="true"><circle cx="22" cy="22" r="21.5" fill="#36cfbf"/><circle cx="22" cy="22" r="15.6" fill="none" stroke="#171b1e" stroke-width="1.4"/><path d="M29.4 16.9a9 9 0 1 0 0 10.2l-3.7-2.6a4.5 4.5 0 1 1 0-5z" fill="#171b1e"/><path fill="#c9a227" stroke="#171b1e" stroke-width=".5" d="M5.89 10.40L6.48 11.89L8.08 11.99L6.84 13.01L7.24 14.56L5.89 13.70L4.54 14.56L4.94 13.01L3.70 11.99L5.30 11.89zM12.70 3.59L13.29 5.08L14.89 5.18L13.65 6.20L14.05 7.75L12.70 6.89L11.35 7.75L11.75 6.20L10.51 5.18L12.11 5.08zM22.00 1.10L22.59 2.59L24.19 2.69L22.95 3.71L23.35 5.26L22.00 4.40L20.65 5.26L21.05 3.71L19.81 2.69L21.41 2.59zM31.30 3.59L31.89 5.08L33.49 5.18L32.25 6.20L32.65 7.75L31.30 6.89L29.95 7.75L30.35 6.20L29.11 5.18L30.71 5.08zM38.11 10.40L38.70 11.89L40.30 11.99L39.06 13.01L39.46 14.56L38.11 13.70L36.76 14.56L37.16 13.01L35.92 11.99L37.52 11.89z"/></svg>`;
-const WORDMARK = (tone = 'light') => `<div class="brand ${tone}">${MARK()}<div><span class="n">Candid</span><span class="s">Security · Bahamas</span></div></div>`;
+// Candid's own round badge, cut from the candidbahamas.com header (the largest copy online, 143 px).
+const BADGE = file(path.join(ROOT, 'public/img/brand/candid-badge.png'));
+const MARK = (size = 44) => `<img src="${BADGE}" width="${size}" height="${size}" alt="" style="flex:none">`;
+const WORDMARK = (tone = 'light') => `<div class="brand ${tone}">${MARK(60)}<div><span class="n">Candid</span><span class="s">Security · Bahamas</span></div></div>`;
 const ROUTE = '<div class="route" aria-hidden="true"><span class="checkpoint"></span><span class="dots"></span></div>';
 
 /** Hand-written captions per slice, from what is actually on each one. */
@@ -240,7 +241,7 @@ function screenPages(sec, [key, title, bullets, opts]) {
 }
 
 const phones = (items) => `<div class="phones">${items.map(([k, c, note]) => `<figure><img src="${file(chunks[k].chunks[0])}" alt="${esc(c)}"><figcaption><b>${esc(c)}</b>${note ? `<span>${esc(note)}</span>` : ''}</figcaption></figure>`).join('')}</div>`;
-const foot = `<footer class="foot"><span>Candid Security · Website proposal</span><span>Code Canvas Consultants Ltd · ${esc(DATE)}</span></footer>`;
+const foot = `<footer class="foot"><span class="fb">${MARK(14)}Candid Security · Website proposal</span><span>Code Canvas Consultants Ltd · ${esc(DATE)}</span></footer>`;
 const screenCount = SECTIONS.reduce((n, s) => n + s.screens.length, 0);
 
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Candid Security – Website Proposal</title>
@@ -271,7 +272,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   .cover .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; font-size: 9.3pt; color: rgba(255,255,255,.78); }
   .cover .meta b { display: block; font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 7.4pt; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
   .cover .meta strong { color: #fff; font-weight: 600; }
-  .cover .photo { height: 2.6in; border-radius: 8px; background-size: cover; background-position: center 40%; position: relative; }
+  .cover .photo { height: 2.35in; border-radius: 8px; background-size: cover; background-position: center 40%; position: relative; }
   .cover .photo::after { content: ""; position: absolute; inset: 0; border-radius: 8px; background: linear-gradient(90deg, rgba(23,27,30,.55), rgba(23,27,30,0) 60%); }
   .divider { display: flex; flex-direction: column; justify-content: center; }
   .divider h1 { font-size: 38pt; margin: 8px 0 16px; } .divider p { color: rgba(255,255,255,.84); font-size: 12pt; max-width: 5.9in; }
@@ -315,7 +316,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   .timeline b { font-family: "JetBrains Mono"; font-weight: 500; font-size: 8pt; letter-spacing: .1em; text-transform: uppercase; color: var(--aqua-text); margin-right: 6px; }
   .next li { margin: 5px 0; }
   .contact-card { margin-top: 16px; background: var(--char-900); color: #fff; border-radius: 10px; padding: 16px 18px; display: flex; justify-content: space-between; gap: 16px; align-items: center; } .contact-card p { margin: 2px 0; color: rgba(255,255,255,.85); } .contact-card strong { color: #fff; font-size: 12pt; }
-  footer.foot { margin-top: auto; padding-top: 8px; font-size: 7.6pt; color: var(--ink-3); display: flex; justify-content: space-between; border-top: 1px solid var(--line); }
+  footer.foot { margin-top: auto; padding-top: 8px; font-size: 7.6pt; color: var(--ink-3); display: flex; justify-content: space-between; border-top: 1px solid var(--line); align-items: center; } footer.foot .fb { display: inline-flex; align-items: center; gap: 6px; }
 </style></head><body>
 
 <section class="page dark-page cover">
@@ -327,7 +328,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   </div>
   <div class="photo" style="background-image:url('${file(COVER)}')"></div>
   <div class="meta">
-    <div><b>Prepared for</b><strong>Candid Security Ltd.</strong><br>Freeport, Grand Bahama &amp; Nassau, New Providence<br>Attention: Cleveland A. Duncombe, President &amp; CEO</div>
+    <div><b>Prepared for</b><strong>Candid Security Ltd.</strong><br>Polaris Drive, Freeport, Grand Bahama<br>and Nassau, New Providence<br>Attention: Cleveland A. Duncombe, President &amp; CEO</div>
     <div><b>Prepared by</b><strong>Keron Lewis</strong>, Code Canvas Consultants Ltd<br>Port of Spain · codecanvastt.com<br>+1 868 466-CODE · keronlewis@live.com</div>
   </div>
 </section>
@@ -402,6 +403,7 @@ ${sec.screens.map(s => screenPages(sec, s)).join('')}
     <div class="card"><h3>Emails included</h3><ul><li>To applicants: application received, every stage change, booking confirmations, documents sent back, recruiter messages, password reset</li><li>To the office: new application, new quote, new pickup request, new message</li><li>A failed email never blocks the action; it is noted on the applicant’s record</li></ul></div>
   </div>
   <h2>Ownership</h2>
+  <p><b>Your domain.</b> We’ll confirm candidbahamas.com is registered in Candid Security’s name, so you always control it.</p>
   <p>Candid’s content, domain, documents and data belong to Candid at all times. Office details, job postings, email templates, screening sessions and staff accounts are all managed from the back office without a developer.</p>
   ${foot}
 </section>
@@ -466,8 +468,8 @@ ${sec.screens.map(s => screenPages(sec, s)).join('')}
   </ol>
   <h2>What we need from Candid</h2>
   <ul class="plain">
-    <li>Logo files and any brand guidance, and original photos of officers, vehicles and the offices.</li>
-    <li>Confirmation of the Freeport street address and the Nassau address, office hours, phones and faxes.</li>
+    <li>A vector or high-resolution copy of the badge (the largest online is 143 px, from the current site header), any brand guidance, and original photos of officers, vehicles and the offices.</li>
+    <li>Confirmation of the Freeport street number and the Nassau address, office hours, phones and faxes.</li>
     <li>Confirmation of leadership names and titles, and the openings to publish at launch.</li>
     <li>The mailboxes for applications and client requests (for example hr@ and president@candidbahamas.net).</li>
     <li>Access to the candidbahamas.com domain settings, and review of the privacy notice by Candid’s counsel.</li>

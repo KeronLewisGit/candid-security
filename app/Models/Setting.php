@@ -35,7 +35,7 @@ class Setting extends Model
     public const array FIELDS = [
         'freeport_phone' => ['Freeport phone', '242-352-5499'],
         'freeport_fax' => ['Freeport fax', '242-352-5489', 'Leave empty to hide.'],
-        'freeport_address' => ['Freeport address', "Polaris Drive\nFreeport, Grand Bahama", 'New Polaris Drive head office (The Tribune, Aug 2016). Confirm the street number.'],
+        'freeport_address' => ['Freeport address', "Polaris Drive\nFreeport, Grand Bahama", 'Head office since Aug 2016 (The Tribune); the FindYello directory lists #5 Polaris Dr. The candidbahamas.com contact page (last edited 2011) still shows the old Sun Plaza office. Confirm the street number.'],
         'freeport_hours' => ['Freeport office hours', '', 'Leave empty to show “Call for office hours”.'],
         'nassau_phone' => ['Nassau phone', '242-361-5499'],
         'nassau_fax' => ['Nassau fax', '242-361-5490', 'Leave empty to hide.'],

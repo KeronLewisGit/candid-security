@@ -139,4 +139,17 @@ class PublicSiteTest extends TestCase
             }
         }
     }
+
+    public function test_the_logo_and_icons_exist(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+        preg_match_all('#href="[^"]*/((?:favicon|apple-touch-icon)[^"/]*\.png)"|src="[^"]*/(img/brand/[^"]+\.png)"#', (string) $html, $m);
+        $files = array_values(array_unique(array_filter(array_merge($m[1], $m[2]))));
+
+        $this->assertContains('img/brand/candid-badge.png', $files);
+        $this->assertCount(4, $files);
+        foreach ($files as $f) {
+            $this->assertFileExists(public_path($f));
+        }
+    }
 }

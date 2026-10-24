@@ -16,7 +16,7 @@
         '@type' => 'Organization',
         'name' => candid('name'),
         'url' => route('home'),
-        'logo' => asset('favicon.svg'),
+        'logo' => asset('img/brand/candid-badge.png'),
         'foundingDate' => (string) candid('founded'),
         'email' => setting('general_email') ?: null,
         'areaServed' => ['Grand Bahama', 'New Providence', 'Abaco', 'Bimini'],

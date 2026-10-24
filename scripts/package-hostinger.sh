@@ -35,7 +35,7 @@ cp -R "$ROOT/public/build" "$STAGE/build"
 cp -R "$ROOT/public/img" "$STAGE/img"
 # Applicant documents live in candid-app/storage/app/private (never under public_html).
 
-cp "$ROOT/public/favicon.svg" "$STAGE/favicon.svg"
+cp "$ROOT"/public/favicon-*.png "$ROOT/public/apple-touch-icon.png" "$STAGE/"
 cp "$ROOT/deploy/index.php" "$STAGE/index.php"
 cp "$ROOT/deploy/.htaccess" "$STAGE/.htaccess"
 cp "$ROOT/deploy/robots.txt" "$STAGE/robots.txt"
