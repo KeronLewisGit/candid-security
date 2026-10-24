@@ -35,8 +35,9 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
-        Auth::logout();
-        $request->session()->invalidate();
+        Auth::guard('web')->logout();
+        // Staff and applicants share one session cookie: signing out of one must not sign out the other.
+        $request->session()->regenerate();
         $request->session()->regenerateToken();
 
         return to_route('login');

@@ -238,4 +238,46 @@ class ApplicantPortalTest extends TestCase
         $draft = Application::factory()->create(['step' => 3]);
         $this->actingAs($draft->applicant, 'applicant')->get(route('portal.applications.show', $draft->reference))->assertRedirect(route('apply.step', [$draft->reference, 3]));
     }
+
+    public function test_a_slot_on_another_island_cannot_be_booked(): void
+    {
+        Notification::fake();
+        $a = $this->submitted('entrance_exam', ['island' => 'grand_bahama']);
+        $abaco = $this->slot('exam', ['island' => 'abaco']);
+
+        $this->actingAs($a->applicant, 'applicant')->post(route('portal.applications.book', $a->reference), ['slot' => $abaco->id])->assertSessionHasErrors('slot');
+        $this->assertSame(0, $a->bookings()->count());
+    }
+
+    public function test_withdrawing_hands_a_future_seat_back(): void
+    {
+        Notification::fake();
+        $slot = $this->slot('exam', ['capacity' => 1]);
+        $a = $this->submitted('entrance_exam', ['island' => 'grand_bahama']);
+        $this->actingAs($a->applicant, 'applicant')->post(route('portal.applications.book', $a->reference), ['slot' => $slot->id])->assertRedirect();
+        $this->assertSame(0, ScreeningSlot::query()->available('exam', 'grand_bahama')->count());
+
+        $this->actingAs($a->applicant, 'applicant')->post(route('portal.applications.withdraw', $a->reference))->assertRedirect();
+        $this->assertSame(0, $a->bookings()->count());
+        $this->assertSame(1, ScreeningSlot::query()->available('exam', 'grand_bahama')->count());
+    }
+
+    public function test_signing_out_of_the_portal_keeps_a_staff_session(): void
+    {
+        $staff = $this->staff('admin', ['email' => 'boss@candid.test']);
+        $applicant = Applicant::factory()->create(['email' => 'jo@example.com']);
+        $this->post(route('login'), ['email' => 'boss@candid.test', 'password' => 'password'])->assertRedirect();
+        $this->post(route('portal.login'), ['email' => 'jo@example.com', 'password' => 'password'])->assertRedirect();
+        $staffKey = auth()->guard('web')->getName();
+        $applicantKey = auth()->guard('applicant')->getName();
+
+        $this->post(route('portal.logout'))->assertRedirect(route('careers'));
+        $this->assertSame($staff->id, session($staffKey));
+        $this->assertNull(session($applicantKey));
+
+        $this->post(route('portal.login'), ['email' => 'jo@example.com', 'password' => 'password'])->assertRedirect(route('portal.dashboard'));
+        $this->post(route('logout'))->assertRedirect(route('login'));
+        $this->assertSame($applicant->id, session($applicantKey));
+        $this->assertNull(session($staffKey));
+    }
 }

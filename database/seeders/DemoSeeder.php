@@ -67,6 +67,24 @@ class DemoSeeder extends Seeder
             $demo->inbox()->create(['application_id' => $app->id, 'title' => 'Next step: entrance exam', 'body' => 'You are invited to sit the Candid entrance exam. Choose a date in your portal.', 'link' => route('portal.applications.show', $app->reference)]);
         }
 
+        // A second, unfinished application saved up to "Review & send", so every step of the
+        // online form can be walked through (and shown) without sending anything.
+        if (! $demo->applications()->whereNull('submitted_at')->exists()) {
+            $draft = new Application([
+                'first_name' => 'Jordan', 'last_name' => 'Demo', 'email' => $demo->email, 'phone' => '242-555-0142',
+                'date_of_birth' => now()->subYears(27)->subDays(55)->toDateString(), 'island' => 'grand_bahama', 'settlement' => 'Freeport', 'citizenship' => 'bahamian',
+                'emergency_name' => 'Next of kin', 'emergency_phone' => '242-555-0100', 'position' => $jobs[2]->position,
+                'work_islands' => ['grand_bahama'], 'employment_type' => 'full_time', 'shifts' => ['day', 'evening'], 'available_from' => now()->addWeeks(2)->toDateString(),
+                'drivers_licence' => 'commercial', 'firearm_licence' => false, 'guard_licence' => true, 'experience_years' => 3,
+                'last_employer' => 'Sample Employer Ltd.', 'education' => 'bgcse', 'certifications' => ['first_aid', 'security_course'], 'step' => 5,
+            ]);
+            $draft->applicant_id = $demo->id;
+            $draft->job_posting_id = $jobs[2]->id;
+            $draft->save();
+            $this->document($draft, 'police_certificate', 'pending', $hr);
+            $this->document($draft, 'passport', 'pending', $hr);
+        }
+
         // A spread of illustrative applicants across stages and islands.
         if (Application::query()->count() < 5) {
             $names = [['Andre', 'Rolle'], ['Keisha', 'Bethel'], ['Marvin', 'Ferguson'], ['Tamika', 'Johnson'], ['Delano', 'Smith'], ['Shanice', 'Pinder'], ['Romeo', 'Cartwright'], ['Latoya', 'Knowles'], ['Jamal', 'Saunders'], ['Crystal', 'Moss'], ['Dwight', 'Thompson'], ['Nadia', 'Higgs'], ['Kevin', 'Munnings'], ['Sasha', 'Gibson']];

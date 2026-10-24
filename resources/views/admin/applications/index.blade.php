@@ -18,14 +18,14 @@
         <div class="a-card overflow-x-auto">
             <table class="data-table">
                 <thead><tr>
-                    <th class="w-10"><input type="checkbox" class="h-4 w-4" aria-label="Select all on this page" @change="all($event)"></th>
+                    <th class="w-10"><label class="-m-2.5 inline-flex h-11 w-11 cursor-pointer items-center justify-center"><input type="checkbox" class="h-4 w-4" aria-label="Select all on this page" @change="all($event)"></label></th>
                     <th>Applicant</th><th>Position</th><th>Island</th><th>Stage</th><th>Documents</th><th class="r">Exam</th><th>Recruiter</th><th class="r">Sent</th>
                 </tr></thead>
                 <tbody>
                     @forelse ($applications as $a)
                         @php($missing = $a->missingDocuments())
                         <tr>
-                            <td><input type="checkbox" name="ids[]" value="{{ $a->id }}" data-row x-model="selected" class="h-4 w-4" aria-label="Select {{ $a->full_name }}"></td>
+                            <td><label class="-m-2.5 inline-flex h-11 w-11 cursor-pointer items-center justify-center"><input type="checkbox" name="ids[]" value="{{ $a->id }}" data-row x-model="selected" class="h-4 w-4" aria-label="Select {{ $a->full_name }}"></label></td>
                             <td><a href="{{ route('admin.applications.show', $a) }}" class="font-semibold hover:text-aqua-text">{{ $a->full_name }}</a><span class="mono block text-xs text-ink-3">{{ $a->reference }}</span></td>
                             <td>{{ $a->roleTitle() }}</td>
                             <td>{{ $a->islandName() }}</td>

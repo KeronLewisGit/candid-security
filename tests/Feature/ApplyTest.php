@@ -184,14 +184,28 @@ class ApplyTest extends TestCase
         $this->assertSame(1, Application::count());
     }
 
-    public function test_signed_in_applicant_gets_a_prefilled_new_draft(): void
+    public function test_signed_in_applicant_gets_a_prefilled_form_and_the_draft_is_saved_on_post(): void
     {
         $a = $this->submitted('rejected', ['settlement' => 'Hunters']);
         $job = JobPosting::factory()->create(['title' => 'Lifeguard', 'position' => 'lifeguard']);
+        $applicant = $a->applicant;
 
-        $this->actingAs($a->applicant, 'applicant')->get(route('apply', ['job' => $job->slug]))->assertRedirect();
+        // Following an "Apply" link shows step 1 pre-filled but saves nothing.
+        $this->actingAs($applicant, 'applicant')->get(route('apply', ['job' => $job->slug]))
+            ->assertOk()->assertSee('Hunters')->assertSee(route('apply.begin'), false);
+        $this->actingAs($applicant, 'applicant')->get(route('apply'))->assertOk();
+        $this->assertSame(0, Application::query()->whereNull('submitted_at')->count());
+
+        $step1 = array_diff_key($this->step1(['settlement' => 'Hunters', 'job' => $job->slug]), array_flip(['email', 'password', 'password_confirmation']));
+        $this->actingAs($applicant, 'applicant')->post(route('apply.begin'), $step1)->assertRedirect();
         $draft = Application::query()->whereNull('submitted_at')->firstOrFail();
         $this->assertSame('Hunters', $draft->settlement);
         $this->assertSame('lifeguard', $draft->position);
+        $this->assertSame($applicant->email, $draft->email);
+        $this->assertSame(2, $draft->step);
+
+        // Posting step 1 again resumes that draft instead of starting another.
+        $this->actingAs($applicant, 'applicant')->post(route('apply.begin'), $step1)->assertRedirect(route('apply.step', [$draft->reference, 2]));
+        $this->assertSame(1, Application::query()->whereNull('submitted_at')->count());
     }
 }

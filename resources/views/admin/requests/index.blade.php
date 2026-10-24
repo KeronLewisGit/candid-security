@@ -22,7 +22,7 @@
                         <p class="rounded-lg border border-dashed border-line-strong p-4 text-center text-xs text-ink-3 {{ $col['items']->count() ? 'hidden' : '' }}" data-empty>Empty</p>
                         @foreach ($col['items'] as $r)
                             <article id="card-{{ $r->id }}" @class(['kanban-card', 'is-late' => $r->isOverdue()]) draggable="true" data-url="{{ route('admin.requests.update', $r) }}" data-name="{{ $r->reference }}" @dragstart="start($event, {{ $r->id }})" @dragend="end()" :class="dragging === {{ $r->id }} && 'opacity-40'">
-                                <div class="flex items-start justify-between gap-2"><a href="{{ route('admin.requests.show', $r) }}" class="font-semibold hover:text-aqua-text">{{ $r->company ?: $r->name }}</a><span class="badge-id !py-0 text-ink-3">{{ candid('islands.'.$r->island.'.code') ?? '—' }}</span></div>
+                                <div class="flex items-start justify-between gap-2"><a href="{{ route('admin.requests.show', $r) }}" class="-my-3 inline-block py-3 font-semibold hover:text-aqua-text">{{ $r->company ?: $r->name }}</a><span class="badge-id !py-0 text-ink-3">{{ candid('islands.'.$r->island.'.code') ?? '—' }}</span></div>
                                 <p class="mono text-[11px] text-ink-3">{{ $r->reference }}</p>
                                 @if ($kind === 'quote')
                                     <p class="mt-1.5 text-xs text-ink-2">{{ $r->option('site_type', $R::SITE_TYPES) }} · {{ $r->detail('posts') }} {{ str('post')->plural((int) $r->detail('posts')) }} · {{ $r->option('coverage', $R::COVERAGE) }} · {{ $r->option('hours', $R::HOURS) }}</p>
@@ -36,8 +36,8 @@
                                 <form method="POST" action="{{ route('admin.requests.update', $r) }}" class="mt-2 flex gap-1">
                                     @csrf @method('PATCH')
                                     <label class="sr-only" for="st-{{ $r->id }}">Status for {{ $r->reference }}</label>
-                                    <select id="st-{{ $r->id }}" name="status" class="a-input !min-h-9 flex-1 !py-1 text-xs">@foreach ($r->statuses() as $k => $l)<option value="{{ $k }}" @selected($r->status === $k)>{{ $l }}</option>@endforeach</select>
-                                    <button class="a-btn a-btn-ghost !min-h-9 px-2 text-xs">Set</button>
+                                    <select id="st-{{ $r->id }}" name="status" class="a-input !min-h-11 lg:!min-h-9 flex-1 !py-1 text-xs">@foreach ($r->statuses() as $k => $l)<option value="{{ $k }}" @selected($r->status === $k)>{{ $l }}</option>@endforeach</select>
+                                    <button class="a-btn a-btn-ghost !min-h-11 lg:!min-h-9 px-2 text-xs">Set</button>
                                 </form>
                             </article>
                         @endforeach

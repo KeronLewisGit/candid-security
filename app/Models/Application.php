@@ -407,6 +407,11 @@ class Application extends Model
         }
         $from = $this->status;
         $this->forceFill(['status' => $status, 'status_changed_at' => now()])->save();
+        if (in_array($status, self::CLOSED_STAGES, true)) {
+            // Hand the seat back so someone else can book that exam, drug test or interview.
+            $this->bookings()->whereHas('slot', fn (Builder $s) => $s->where('starts_at', '>', now()))->delete();
+            $this->unsetRelation('bookings');
+        }
         $this->notes()->create([
             'user_id' => $by?->id,
             'type' => 'status',

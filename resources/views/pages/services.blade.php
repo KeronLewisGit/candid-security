@@ -1,5 +1,5 @@
 <x-layouts.site title="Services" description="Armed and unarmed security officers, armoured transport (cash-in-transit), mobile patrol, aviation security and lifeguards from Candid Security in Freeport and Nassau, The Bahamas.">
-    <x-page-header title="Security services for Bahamian businesses, homes and events." eyebrow="Services" code="CSL" photo="patrol-car" lead="Five services run from our Freeport and Nassau offices. Each one can be booked on its own or combined on the same site." />
+    <x-page-header title="Security services for Bahamian businesses, homes and events." eyebrow="Services" code="CSL" photo="nassau" lead="Five services run from our Freeport and Nassau offices. Each one can be booked on its own or combined on the same site." />
 
     <section class="wrap mt-16 space-y-6 md:mt-20">
         @foreach ($services as $key => $s)

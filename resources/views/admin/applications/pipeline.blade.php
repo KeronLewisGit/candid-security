@@ -19,7 +19,7 @@
                             @php($late = $a->status_changed_at && $a->status_changed_at->lt(now()->subDays(3)))
                             @php($booking = ($k = $a->bookableKind()) ? $a->bookingFor($k) : null)
                             <article id="card-{{ $a->id }}" @class(['kanban-card', 'is-late' => $late]) draggable="true" data-url="{{ route('admin.applications.update', $a) }}" data-name="{{ $a->full_name }}" @dragstart="start($event, {{ $a->id }})" @dragend="end()" :class="dragging === {{ $a->id }} && 'opacity-40'">
-                                <a href="{{ route('admin.applications.show', $a) }}" class="font-semibold hover:text-aqua-text">{{ $a->full_name }}</a>
+                                <a href="{{ route('admin.applications.show', $a) }}" class="-my-3 inline-block py-3 font-semibold hover:text-aqua-text">{{ $a->full_name }}</a>
                                 <p class="text-xs text-ink-3">{{ $a->roleTitle() }}</p>
                                 <div class="mt-2 flex flex-wrap gap-1">
                                     <span class="badge-id !py-0 text-ink-3">{{ candid('islands.'.$a->island.'.code') ?? '—' }}</span>
@@ -33,8 +33,8 @@
                                 <form method="POST" action="{{ route('admin.applications.update', $a) }}" class="mt-2 flex gap-1">
                                     @csrf @method('PATCH')
                                     <label class="sr-only" for="mv-{{ $a->id }}">Move {{ $a->full_name }} to</label>
-                                    <select id="mv-{{ $a->id }}" name="status" class="a-input !min-h-9 flex-1 !py-1 text-xs">@foreach ($A::STAGES as $k2 => $l2)<option value="{{ $k2 }}" @selected($a->status === $k2)>{{ $l2 }}</option>@endforeach</select>
-                                    <button class="a-btn a-btn-ghost !min-h-9 px-2 text-xs">Move</button>
+                                    <select id="mv-{{ $a->id }}" name="status" class="a-input !min-h-11 lg:!min-h-9 flex-1 !py-1 text-xs">@foreach ($A::STAGES as $k2 => $l2)<option value="{{ $k2 }}" @selected($a->status === $k2)>{{ $l2 }}</option>@endforeach</select>
+                                    <button class="a-btn a-btn-ghost !min-h-11 lg:!min-h-9 px-2 text-xs">Move</button>
                                 </form>
                             </article>
                         @endforeach

@@ -43,6 +43,13 @@ class ApplyController extends Controller
             return to_route('portal.dashboard')->with('status', 'You have already applied for '.$job->title.'. Track it below.');
         }
 
+        // Nothing is saved until step 1 is posted, so following an "Apply" link never leaves an empty draft behind.
+        return view('pages.apply', ['step' => 1, 'application' => $this->prefill($applicant, $job), 'job' => $job, 'guest' => false] + $this->options());
+    }
+
+    /** A new, unsaved application pre-filled from the applicant's account and last application. */
+    private function prefill(Applicant $applicant, ?JobPosting $job): Application
+    {
         $last = $applicant->applications()->first();
         $application = new Application([
             'first_name' => $applicant->first_name, 'last_name' => $applicant->last_name, 'email' => $applicant->email,
@@ -54,16 +61,16 @@ class ApplyController extends Controller
         $application->applicant_id = $applicant->id;
         $application->job_posting_id = $job?->id;
         $application->position = $job?->position;
-        $application->save();
 
-        return to_route('apply.step', [$application->reference, 1]);
+        return $application;
     }
 
-    /** Step 1 for a visitor: creates the applicant account and the draft together. */
+    /** Step 1: a visitor's post creates the applicant account and the draft together; a signed-in applicant's creates the draft. */
     public function begin(Request $request): RedirectResponse
     {
-        if ($request->user('applicant')) {
-            return to_route('apply', ['job' => input_string($request->input('job'))]);
+        $signedIn = $request->user('applicant');
+        if ($signedIn instanceof Applicant) {
+            return $this->beginSignedIn($request, $signedIn);
         }
 
         $request->merge(['email' => strtolower(input_string($request->input('email')))]);
@@ -82,16 +89,45 @@ class ApplyController extends Controller
         Auth::guard('applicant')->login($applicant);
         $request->session()->regenerate();
 
+        $application = $this->createDraft($applicant, $data);
+
+        return to_route('apply.step', [$application->reference, 2])
+            ->with('status', 'Your applicant account is ready and step 1 is saved. You can stop at any point and finish later.');
+    }
+
+    private function beginSignedIn(Request $request, Applicant $applicant): RedirectResponse
+    {
+        $data = $request->validate($this->rules(1) + ['job' => ['nullable', 'string']], $this->messages());
         $job = $this->job(input_string($data['job'] ?? ''));
-        $application = new Application(array_intersect_key($data, array_flip(['first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'island', 'settlement', 'citizenship', 'emergency_name', 'emergency_phone'])));
+
+        // A second click or a re-post resumes the draft instead of starting another one.
+        $draft = $applicant->applications()->whereNull('submitted_at')->where('job_posting_id', $job?->id)->first();
+        if ($draft) {
+            return to_route('apply.step', [$draft->reference, $draft->step]);
+        }
+        if ($job && $applicant->applications()->active()->where('job_posting_id', $job->id)->exists()) {
+            return to_route('portal.dashboard')->with('status', 'You have already applied for '.$job->title.'. Track it below.');
+        }
+
+        $application = $this->createDraft($applicant, $data, $this->prefill($applicant, $job));
+
+        return to_route('apply.step', [$application->reference, 2])->with('status', 'Step 1 is saved. You can stop at any point and finish later.');
+    }
+
+    /** @param array<string, mixed> $data */
+    private function createDraft(Applicant $applicant, array $data, ?Application $application = null): Application
+    {
+        $job = $this->job(input_string($data['job'] ?? ''));
+        $application ??= new Application(['email' => $applicant->email]);
+        $application->fill(array_intersect_key($data, array_flip(['first_name', 'last_name', 'phone', 'date_of_birth', 'island', 'settlement', 'citizenship', 'emergency_name', 'emergency_phone'])));
+        $application->email = $applicant->email;
         $application->applicant_id = $applicant->id;
         $application->job_posting_id = $job?->id;
         $application->position = $job?->position;
         $application->step = 2;
         $application->save();
 
-        return to_route('apply.step', [$application->reference, 2])
-            ->with('status', 'Your applicant account is ready and step 1 is saved. You can stop at any point and finish later.');
+        return $application;
     }
 
     public function step(Request $request, string $reference, int $step): View|RedirectResponse

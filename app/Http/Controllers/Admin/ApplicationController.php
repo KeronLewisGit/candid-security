@@ -152,15 +152,21 @@ class ApplicationController extends Controller
             fwrite($out, "\xEF\xBB\xBF");
             fputcsv($out, ['Reference', 'Submitted', 'First name', 'Last name', 'Email', 'Phone', 'Island', 'Settlement', 'Age', 'Position', 'Stage', 'Docs complete', 'Exam %', 'Drug test', 'Background', 'Driver’s licence', 'Firearm licence', 'Experience (yrs)', 'Work islands']);
             foreach ($rows as $a) {
-                fputcsv($out, [
+                fputcsv($out, array_map(self::csvCell(...), [
                     $a->reference, $a->submitted_at?->format('Y-m-d'), $a->first_name, $a->last_name, $a->email, $a->phone, $a->islandName(), $a->settlement, $a->age(),
                     $a->roleTitle(), $a->stageLabel(), $a->documentsComplete() ? 'Yes' : 'No', $a->exam_score, Application::DRUG_RESULTS[$a->drug_test_result] ?? '',
                     Application::BACKGROUND_RESULTS[$a->background_result] ?? '', Application::LICENCES[$a->drivers_licence] ?? '', $a->firearm_licence ? 'Yes' : 'No',
                     $a->experience_years, implode('; ', array_map('island_name', $a->work_islands ?? [])),
-                ]);
+                ]));
             }
             fclose($out);
         }, 'candid-applicants-'.now()->format('Y-m-d').'.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    /** Applicant-typed text must not run as a spreadsheet formula when the CSV is opened in Excel. */
+    private static function csvCell(mixed $value): mixed
+    {
+        return is_string($value) && preg_match('/^[=+\-@\t\r]/', $value) ? "'".$value : $value;
     }
 
     /** @return array{subject: string, body: string, set_status: string|null} */

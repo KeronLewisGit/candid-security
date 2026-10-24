@@ -1,7 +1,7 @@
 @php($S = \App\Models\ScreeningSlot::class)
 <x-layouts.admin title="Screening sessions">
     <p class="mb-5 max-w-3xl text-ink-2">Add entrance exam sittings, drug-test sessions and interview times. Applicants at that stage see open seats on their island in the portal and book themselves.</p>
-    <div class="grid gap-5 xl:grid-cols-[22rem_minmax(0,1fr)]">
+    <div class="grid grid-cols-1 gap-5 xl:grid-cols-[22rem_minmax(0,1fr)]">
         <form method="POST" action="{{ route('admin.slots.store') }}" class="a-card space-y-4 self-start p-5">
             @csrf
             <h2 class="font-semibold">Add a session</h2>

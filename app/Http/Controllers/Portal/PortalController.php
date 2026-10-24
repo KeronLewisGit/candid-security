@@ -94,7 +94,8 @@ class PortalController extends Controller
         $data = $request->validate(['slot' => ['required', 'integer']]);
 
         $booking = DB::transaction(function () use ($application, $kind, $data) {
-            $slot = ScreeningSlot::query()->whereKey($data['slot'])->where('kind', $kind)->lockForUpdate()->withCount('bookings')->first();
+            $slot = ScreeningSlot::query()->whereKey($data['slot'])->where('kind', $kind)
+                ->when($application->island, fn ($q, string $island) => $q->where('island', $island))->lockForUpdate()->withCount('bookings')->first();
             if (! $slot || ! $slot->isBookable()) {
                 return null;
             }

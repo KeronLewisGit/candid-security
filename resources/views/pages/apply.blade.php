@@ -1,7 +1,8 @@
 @php
     $a = $application;
     $isGuest = $guest;
-    $action = $isGuest ? route('apply.begin') : route('apply.save', [$a->reference, $step]);
+    $saved = (bool) $a?->exists; // false for a guest, or a signed-in applicant who has not posted step 1 yet
+    $action = $saved ? route('apply.save', [$a->reference, $step]) : route('apply.begin');
     $islands = collect(candid('islands'))->map(fn ($i) => $i['name'])->all();
     $docs = $a?->documents ?? collect();
 @endphp
@@ -13,7 +14,7 @@
             @foreach ($steps as $n => $label)
                 @php($state = $n < $step ? 'is-done' : ($n === $step ? 'is-current' : ''))
                 <li class="{{ $state }}" @if($n === $step) aria-current="step" @endif>
-                    @if (! $isGuest && $n <= $a->step && $n !== $step)
+                    @if ($saved && $n <= $a->step && $n !== $step)
                         <a href="{{ route('apply.step', [$a->reference, $n]) }}" class="flex flex-col items-center gap-2 rounded"><span class="checkpoint is-light {{ $n < $step || $n <= $a->step ? 'is-done' : '' }}"></span><span class="hidden sm:block">{{ $label }}</span></a>
                     @else
                         <span class="checkpoint is-light {{ $n < $step ? 'is-done' : ($n === $step ? '' : 'is-todo') }}"></span><span class="hidden sm:block">{{ $label }}</span>
@@ -44,7 +45,7 @@
                     <p class="mt-1 text-ink-2">{{ $isGuest ? 'This also creates your applicant account, so you can stop at any point and come back.' : 'Check these details are still right.' }}</p>
                     @if ($isGuest)<p class="mt-2 text-[0.9375rem]">Already started? <a href="{{ route('portal.login') }}" class="text-link">Sign in to continue</a>.</p>@endif
                 </div>
-                @if ($isGuest && $job)<input type="hidden" name="job" value="{{ $job->slug }}">@endif
+                @if (! $saved && $job)<input type="hidden" name="job" value="{{ $job->slug }}">@endif
                 <div class="grid gap-5 sm:grid-cols-2">
                     <x-field name="first_name" label="First name" :value="$a?->first_name" required autocomplete="given-name" />
                     <x-field name="last_name" label="Last name" :value="$a?->last_name" required autocomplete="family-name" />
@@ -147,10 +148,10 @@
 
             <div class="flex flex-col-reverse gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex flex-wrap gap-3">
-                    @if (! $isGuest && $step > 1)
+                    @if ($saved && $step > 1)
                         <a href="{{ route('apply.step', [$a->reference, $step - 1]) }}" class="btn btn-outline"><x-icon name="arrow-left" class="h-4 w-4" />Back</a>
                     @endif
-                    @if (! $isGuest && $step < 5)
+                    @if ($saved && $step < 5)
                         <button type="submit" name="action" value="exit" class="btn px-3 font-semibold text-link underline underline-offset-4">Save &amp; finish later</button>
                     @endif
                 </div>

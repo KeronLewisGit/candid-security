@@ -286,4 +286,14 @@ class AdminTest extends TestCase
         $this->actingAs($admin)->put(route('admin.users.update', $admin), ['name' => $admin->name, 'email' => $admin->email, 'role' => 'recruiter', 'is_active' => '1'])->assertSessionHasErrors('role');
         $this->assertSame('admin', $admin->refresh()->role);
     }
+
+    public function test_csv_export_neutralises_spreadsheet_formulas(): void
+    {
+        $this->submitted('new', ['first_name' => '=HYPERLINK("http://example.com","x")', 'settlement' => '+cmd']);
+        $csv = $this->actingAs($this->staff('recruiter'))->get(route('admin.applications.export'))->streamedContent();
+
+        $this->assertStringNotContainsString(',"=HYPERLINK', $csv);
+        $this->assertStringContainsString('"\'=HYPERLINK', $csv);
+        $this->assertStringContainsString("'+cmd", $csv);
+    }
 }

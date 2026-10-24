@@ -104,17 +104,6 @@ Alpine.data('bulkSelect', () => ({
     },
 }));
 
-/* Column chart hover: one tooltip that follows the focused or hovered column. */
-Alpine.data('columnChart', () => ({
-    tip: null,
-    show(el) {
-        const box = el.getBoundingClientRect();
-        const host = this.$root.getBoundingClientRect();
-        this.tip = { label: el.dataset.label, value: el.dataset.value, x: box.left - host.left + box.width / 2, y: box.top - host.top };
-    },
-    hide() { this.tip = null; },
-}));
-
 /* Dashboard chrome: density, mobile nav, "/" to search. */
 Alpine.data('adminShell', () => ({
     nav: false,

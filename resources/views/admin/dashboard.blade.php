@@ -49,7 +49,7 @@
                 <ul class="mt-4 space-y-2.5">
                     @foreach ($A::ACTIVE_STAGES as $stage)
                         @php($n = (int) ($stageCounts[$stage] ?? 0))
-                        <li><a href="{{ route('admin.applications.index', ['stage' => $stage]) }}" class="grid grid-cols-[9.5rem_1fr_2.5rem] items-center gap-3 rounded hover:bg-surface-2">
+                        <li><a href="{{ route('admin.applications.index', ['stage' => $stage]) }}" class="grid min-h-11 grid-cols-[9.5rem_1fr_2.5rem] items-center gap-3 rounded hover:bg-surface-2 md:min-h-8">
                             <span class="text-sm">{{ $A::STAGES[$stage] }}</span>
                             <span class="h-3 rounded-full bg-series-track"><span class="block h-3 rounded-full bg-series" style="width: {{ $n ? max(4, round($n / $max * 100)) : 0 }}%"></span></span>
                             <span class="num text-right text-sm font-semibold">{{ $n }}</span>
@@ -75,7 +75,7 @@
 
         <div class="mt-4 grid gap-4 xl:grid-cols-2">
             <section class="a-card overflow-hidden">
-                <div class="flex items-center justify-between p-5 pb-3"><h3 class="font-semibold">Latest applications</h3><a href="{{ route('admin.applications.index') }}" class="text-sm text-link">All</a></div>
+                <div class="flex items-center justify-between p-5 pb-3"><h3 class="font-semibold">Latest applications</h3><a href="{{ route('admin.applications.index') }}" class="-my-3 -mr-3 inline-flex min-h-11 items-center px-3 text-sm text-link">All</a></div>
                 <table class="data-table"><tbody>
                     @foreach ($recentApplications as $a)
                         <tr><td><a href="{{ route('admin.applications.show', $a) }}" class="font-semibold hover:text-aqua-text">{{ $a->full_name }}</a><span class="block text-xs text-ink-3">{{ $a->roleTitle() }} · {{ $a->islandName() }}</span></td><td><x-status :stage="$a->status" /></td><td class="r text-ink-3">{{ $a->submitted_at?->diffForHumans(short: true) }}</td></tr>
@@ -83,7 +83,7 @@
                 </tbody></table>
             </section>
             <section class="a-card overflow-hidden">
-                <div class="flex items-center justify-between p-5 pb-3"><h3 class="font-semibold">Next screening sessions</h3><a href="{{ route('admin.slots.index') }}" class="text-sm text-link">Manage</a></div>
+                <div class="flex items-center justify-between p-5 pb-3"><h3 class="font-semibold">Next screening sessions</h3><a href="{{ route('admin.slots.index') }}" class="-my-3 -mr-3 inline-flex min-h-11 items-center px-3 text-sm text-link">Manage</a></div>
                 <table class="data-table"><tbody>
                     @forelse ($upcomingSlots as $s)
                         <tr><td><span class="font-semibold">{{ $s->kindLabel() }}</span><span class="block text-xs text-ink-3">{{ island_name($s->island) }} · {{ $s->location }}</span></td><td class="num">{{ $s->starts_at->format('D j M, g:i a') }}</td><td class="r num">{{ $s->bookings_count }}/{{ $s->capacity }}</td></tr>

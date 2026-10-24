@@ -66,12 +66,6 @@ class ApplicantNotifier
         $this->send($document->application, 'Please upload your '.strtolower($document->typeLabel()).' again', $body);
     }
 
-    /** The recruiter's email already went out; mirror it into the portal inbox. */
-    public function messageSent(Application $application, string $subject, string $body): void
-    {
-        $this->record($application, $subject, $body);
-    }
-
     public function message(Application $application, string $subject, string $body): bool
     {
         $this->record($application, $subject, $body);

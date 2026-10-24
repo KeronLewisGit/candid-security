@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -63,11 +62,6 @@ class ScreeningSlot extends Model
     public function kindLabel(): string
     {
         return self::KINDS[$this->kind] ?? $this->kind;
-    }
-
-    public function endsAt(): CarbonInterface
-    {
-        return $this->starts_at->copy()->addMinutes($this->duration_minutes);
     }
 
     public function seatsLeft(): int

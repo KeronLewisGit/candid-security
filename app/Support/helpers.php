@@ -59,13 +59,6 @@ if (! function_exists('tel_href')) {
     }
 }
 
-if (! function_exists('sms_href')) {
-    function sms_href(?string $number): string
-    {
-        return 'sms:+'.(us_digits($number) ?? preg_replace('/\D+/', '', (string) $number));
-    }
-}
-
 if (! function_exists('format_phone')) {
     /** 242-352-5499, the way Bahamian numbers are written locally; the input unchanged otherwise. */
     function format_phone(?string $number): string

@@ -21,8 +21,6 @@ return [
     'name' => 'Candid Security Ltd.',
     'short_name' => 'Candid Security',
     'founded' => 1997,
-    // Home page of candidbahamas.com, verbatim.
-    'tagline' => 'Protecting you, and your business, is our business.',
 
     // Who receives "new application" and "new request" emails (comma separated).
     'notify' => env('CANDID_NOTIFY_EMAIL'),
@@ -105,7 +103,7 @@ return [
             'name' => 'Lifeguards',
             'eyebrow' => 'Pools & beaches',
             'icon' => 'lifebuoy',
-            'photo' => 'lifeguard',
+            'photo' => 'cabbage-beach',
             'body_photo' => 'beach',
             'since' => null,
             'summary' => 'Lifeguards for hotel pools, beaches and events, scheduled alongside your security cover.',
@@ -192,7 +190,7 @@ return [
         'armored-truck' => ['w' => 1920, 'h' => 1280, 'credit' => 'armored-truck', 'ours' => false, 'alt' => 'Armoured cash-in-transit truck on the road'],
         'security-guard' => ['w' => 1920, 'h' => 1316, 'credit' => 'security-guard', 'ours' => false, 'alt' => 'Security officer at an entrance gate at sunset'],
         'cctv' => ['w' => 1920, 'h' => 1440, 'credit' => 'cctv', 'ours' => false, 'alt' => 'Security camera on a building wall'],
-        'lifeguard' => ['w' => 1920, 'h' => 1280, 'credit' => 'lifeguard', 'ours' => false, 'alt' => 'Lifeguard tower and warning flags on a beach'],
+        'cabbage-beach' => ['w' => 1920, 'h' => 1304, 'credit' => 'cabbage-beach', 'ours' => false, 'alt' => 'Surf rolling onto Cabbage Beach, Paradise Island, Nassau'],
         'beach' => ['w' => 1920, 'h' => 1440, 'credit' => 'beach', 'ours' => false, 'alt' => 'Taino Beach, Grand Bahama'],
         'bahamas-flag' => ['w' => 1920, 'h' => 1371, 'credit' => 'bahamas-flag', 'ours' => false, 'alt' => 'The Bahamian flag over Nassau Harbour'],
         'candid-armored' => ['w' => 658, 'h' => 496, 'credit' => 'candid-armored', 'ours' => true, 'alt' => 'Candid armoured officers in front of a Candid armoured van'],

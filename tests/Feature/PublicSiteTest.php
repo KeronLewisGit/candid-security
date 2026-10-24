@@ -125,4 +125,18 @@ class PublicSiteTest extends TestCase
             $this->assertArrayHasKey($s['photo'], config('candid.photos'));
         }
     }
+
+    public function test_every_photo_on_the_public_pages_exists(): void
+    {
+        $pages = ['/', '/services', '/about', '/locations', '/careers', '/request-a-quote', '/armoured-pickup', '/contact', '/apply'];
+        foreach (service_keys() as $key) {
+            $pages[] = '/services/'.$key;
+        }
+        foreach ($pages as $page) {
+            preg_match_all('#/img/[a-z0-9-]+\.webp#', $this->get($page)->assertOk()->getContent(), $m);
+            foreach (array_unique($m[0]) as $src) {
+                $this->assertFileExists(public_path(ltrim($src, '/')), "{$page} links a missing image");
+            }
+        }
+    }
 }
