@@ -1,0 +1,65 @@
+{
+  "_archivo-100-900-normal-DXrUVZxZ.woff2": {
+    "file": "assets/archivo-100-900-normal-DXrUVZxZ.woff2",
+    "src": "_archivo-100-900-normal-DXrUVZxZ.woff2"
+  },
+  "_fonts-D_6UFAPS.css": {
+    "file": "assets/fonts-D_6UFAPS.css",
+    "src": "_fonts-D_6UFAPS.css"
+  },
+  "_jetbrains-mono-500-normal-BWZEU5yA.woff2": {
+    "file": "assets/jetbrains-mono-500-normal-BWZEU5yA.woff2",
+    "src": "_jetbrains-mono-500-normal-BWZEU5yA.woff2"
+  },
+  "_jetbrains-mono-500-normal-CJOVTJB7.woff": {
+    "file": "assets/jetbrains-mono-500-normal-CJOVTJB7.woff",
+    "src": "_jetbrains-mono-500-normal-CJOVTJB7.woff"
+  },
+  "_work-sans-400-normal-DE1_0GuN.woff": {
+    "file": "assets/work-sans-400-normal-DE1_0GuN.woff",
+    "src": "_work-sans-400-normal-DE1_0GuN.woff"
+  },
+  "_work-sans-400-normal-jUejSri3.woff2": {
+    "file": "assets/work-sans-400-normal-jUejSri3.woff2",
+    "src": "_work-sans-400-normal-jUejSri3.woff2"
+  },
+  "_work-sans-500-normal-BKGnScDy.woff2": {
+    "file": "assets/work-sans-500-normal-BKGnScDy.woff2",
+    "src": "_work-sans-500-normal-BKGnScDy.woff2"
+  },
+  "_work-sans-500-normal-BmdXWF6_.woff": {
+    "file": "assets/work-sans-500-normal-BmdXWF6_.woff",
+    "src": "_work-sans-500-normal-BmdXWF6_.woff"
+  },
+  "_work-sans-600-normal-Cg-NlmS7.woff": {
+    "file": "assets/work-sans-600-normal-Cg-NlmS7.woff",
+    "src": "_work-sans-600-normal-Cg-NlmS7.woff"
+  },
+  "_work-sans-600-normal-DB-2V89X.woff2": {
+    "file": "assets/work-sans-600-normal-DB-2V89X.woff2",
+    "src": "_work-sans-600-normal-DB-2V89X.woff2"
+  },
+  "_work-sans-700-normal-CEeo_t6l.woff2": {
+    "file": "assets/work-sans-700-normal-CEeo_t6l.woff2",
+    "src": "_work-sans-700-normal-CEeo_t6l.woff2"
+  },
+  "_work-sans-700-normal-mDs79oer.woff": {
+    "file": "assets/work-sans-700-normal-mDs79oer.woff",
+    "src": "_work-sans-700-normal-mDs79oer.woff"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-Bv2Lm_QH.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-B5C_D_43.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
