@@ -34,7 +34,7 @@
                 <a href="{{ route('pickup') }}" class="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-aqua hover:underline"><x-icon name="truck" class="h-4 w-4" />Book an armoured pickup online</a>
             </div>
         </div>
-        <div class="absolute inset-x-0 bottom-0" aria-hidden="true"><div class="wrap flex items-center"><span class="checkpoint is-pulse -mb-px h-3.5 w-3.5 border-2"></span><span class="route route-run flex-1"></span></div></div>
+        <div class="absolute inset-x-0 bottom-4" aria-hidden="true"><div class="wrap flex items-center"><span class="checkpoint is-pulse h-3.5 w-3.5 border-2"></span><span class="route route-run flex-1"></span></div></div>
     </section>
 
     {{-- Services --}}

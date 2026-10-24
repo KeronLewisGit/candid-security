@@ -140,6 +140,17 @@ class PublicSiteTest extends TestCase
         }
     }
 
+    public function test_the_hero_route_line_sits_inside_the_hero(): void
+    {
+        // The hero clips its overflow, so a checkpoint on (or past) the bottom edge gets sliced.
+        foreach (['/', '/services', '/careers'] as $page) {
+            $html = (string) $this->get($page)->assertOk()->getContent();
+            $this->assertMatchesRegularExpression('#<div class="absolute inset-x-0 bottom-4[^"]*" aria-hidden="true">\s*<div class="wrap flex items-center[^"]*"><span class="checkpoint#', $html, $page);
+            $this->assertStringNotContainsString('checkpoint -mb-px', $html, $page);
+            $this->assertStringNotContainsString('checkpoint is-pulse -mb-px', $html, $page);
+        }
+    }
+
     public function test_the_logo_and_icons_exist(): void
     {
         $html = $this->get('/')->assertOk()->getContent();

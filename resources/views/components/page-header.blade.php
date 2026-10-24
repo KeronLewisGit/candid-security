@@ -17,7 +17,7 @@
         @if ($lead)<p class="lead mt-4 text-white/85 md:mt-5">{{ $lead }}</p>@endif
         {{ $slot }}
     </div>
-    <div class="absolute inset-x-0 bottom-0 flex items-center" aria-hidden="true">
-        <div class="wrap flex items-center gap-0"><span class="checkpoint -mb-px h-3.5 w-3.5 border-2"></span><span class="route flex-1"></span></div>
+    <div class="absolute inset-x-0 bottom-4 flex items-center" aria-hidden="true">
+        <div class="wrap flex items-center gap-0"><span class="checkpoint h-3.5 w-3.5 border-2"></span><span class="route flex-1"></span></div>
     </div>
 </section>

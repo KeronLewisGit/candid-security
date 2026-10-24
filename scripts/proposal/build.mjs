@@ -12,7 +12,7 @@ const chunks = JSON.parse(fs.readFileSync(path.join(SHOTS, 'chunks.json'), 'utf8
 const OUT_HTML = path.resolve('dist/proposal/proposal.html');
 const OUT_PDF = path.resolve('dist/proposal/Candid-Security-Website-Proposal.pdf');
 const DATE = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-const TESTS = process.env.TEST_COUNT ?? '76';
+const TESTS = process.env.TEST_COUNT ?? '77';
 const file = (f) => 'file://' + f;
 
 // Chrome embeds WebP backgrounds losslessly (several MB), so hand it a JPEG of the cover photo (macOS sips).
